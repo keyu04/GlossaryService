@@ -1,14 +1,17 @@
+using Asp.Versioning;
 using GlossaryService.Common.Constants;
 using GlossaryService.Common.DTOs;
 using GlossaryService.Common.Helpers;
 using GlossaryService.DTOs;
 using GlossaryService.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace GlossaryService.Controllers;
 
 [ApiController]
-[Route("api/v1/keywords")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/keywords")]
 public class KeywordsController : ControllerBase
 {
     private readonly IKeywordService _service;
@@ -17,6 +20,7 @@ public class KeywordsController : ControllerBase
 
     // ── GET /api/v1/keywords?search=tomato&tagId=xxx&page=1&pageSize=10 ──
     [HttpGet]
+    [EnableRateLimiting("general")]  
     public async Task<IActionResult> GetAll(
         [FromQuery] string? search,
         [FromQuery] Guid? tagId,
@@ -29,6 +33,7 @@ public class KeywordsController : ControllerBase
 
     // ── GET /api/v1/keywords/{id} ──
     [HttpGet("{id:guid}")]
+    [EnableRateLimiting("general")]  
     public async Task<IActionResult> GetById(Guid id)
     {
         var keyword = await _service.GetByIdAsync(id);
@@ -37,6 +42,7 @@ public class KeywordsController : ControllerBase
 
     // ── POST /api/v1/keywords ──
     [HttpPost]
+    [EnableRateLimiting("strict")]
     public async Task<IActionResult> Create([FromBody] CreateKeywordDto dto)
     {
         var created = await _service.CreateAsync(dto);
@@ -45,6 +51,7 @@ public class KeywordsController : ControllerBase
 
     // ── PUT /api/v1/keywords/{id} ──
     [HttpPut("{id:guid}")]
+    [EnableRateLimiting("strict")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateKeywordDto dto)
     {
         var updated = await _service.UpdateAsync(id, dto);
@@ -53,6 +60,7 @@ public class KeywordsController : ControllerBase
 
     // ── DELETE /api/v1/keywords/{id} ──
     [HttpDelete("{id:guid}")]
+    [EnableRateLimiting("strict")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var deleted = await _service.DeleteAsync(id);

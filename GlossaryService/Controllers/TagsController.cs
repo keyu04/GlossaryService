@@ -1,14 +1,17 @@
+using Asp.Versioning;
 using GlossaryService.Common.Constants;
 using GlossaryService.Common.DTOs;
 using GlossaryService.Common.Helpers;
 using GlossaryService.DTOs;
 using GlossaryService.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace GlossaryService.Controllers;
 
 [ApiController]
-[Route("api/v1/tags")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/tags")]
 public class TagsController : ControllerBase
 {
     private readonly ITagService _service;
@@ -16,6 +19,7 @@ public class TagsController : ControllerBase
     public TagsController(ITagService service) => _service = service;
 
     [HttpGet]
+    [EnableRateLimiting("general")]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? search,
         [FromQuery] int page = 1,
@@ -26,6 +30,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [EnableRateLimiting("general")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var tag = await _service.GetByIdAsync(id);
@@ -33,6 +38,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpPost]
+    [EnableRateLimiting("strict")]
     public async Task<IActionResult> Create([FromBody] CreateTagDto dto)
     {
         var created = await _service.CreateAsync(dto);
@@ -40,6 +46,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [EnableRateLimiting("strict")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTagDto dto)
     {
         var updated = await _service.UpdateAsync(id, dto);
@@ -47,6 +54,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [EnableRateLimiting("strict")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var deleted = await _service.DeleteAsync(id);

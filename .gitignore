@@ -485,3 +485,6 @@ $RECYCLE.BIN/
 .env
 appsettings.Production.json
 docker-compose.override.yml
+**/bin/
+**/obj/appsettings.Development.json
+*.http

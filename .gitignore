@@ -489,3 +489,4 @@ $RECYCLE.BIN/
 docker-compose.override.yml
 **/appsettings.Development.json
 **/Migrations/
+**/Properties/launchSettings.json

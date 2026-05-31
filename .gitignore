@@ -483,8 +483,9 @@ $RECYCLE.BIN/
 
 .vs/
 .env
-appsettings.Production.json
-docker-compose.override.yml
 **/bin/
 **/obj/appsettings.Development.json
 *.http
+docker-compose.override.yml
+GlossaryService/appsettings.Production.json
+GlossaryService/appsettings.Development.json

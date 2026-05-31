@@ -31,7 +31,12 @@ builder.Services.AddApiVersioning(options =>
     options.AssumeDefaultVersionWhenUnspecified = true;  // ← no version = v1
     options.ReportApiVersions = true;  // ← response header shows supported versions
 })
-.AddMvc();
+.AddMvc()
+.AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'V";
+        options.SubstituteApiVersionInUrl = true;
+    });
 
 // ── Rate Limiting ─────────────────────────────────────────────────
 builder.Services.AddRateLimiter(options =>

@@ -4,6 +4,7 @@ using GlossaryService.Common.DTOs;
 using GlossaryService.Common.Helpers;
 using GlossaryService.DTOs;
 using GlossaryService.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -20,7 +21,7 @@ public class KeywordsController : ControllerBase
 
     // ── GET /api/v1/keywords?search=tomato&tagId=xxx&page=1&pageSize=10 ──
     [HttpGet]
-    [EnableRateLimiting("general")]  
+    [EnableRateLimiting("general")]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? search,
         [FromQuery] Guid? tagId,
@@ -33,7 +34,7 @@ public class KeywordsController : ControllerBase
 
     // ── GET /api/v1/keywords/{id} ──
     [HttpGet("{id:guid}")]
-    [EnableRateLimiting("general")]  
+    [EnableRateLimiting("general")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var keyword = await _service.GetByIdAsync(id);
@@ -41,6 +42,7 @@ public class KeywordsController : ControllerBase
     }
 
     // ── POST /api/v1/keywords ──
+    [Authorize]
     [HttpPost]
     [EnableRateLimiting("strict")]
     public async Task<IActionResult> Create([FromBody] CreateKeywordDto dto)
@@ -50,6 +52,7 @@ public class KeywordsController : ControllerBase
     }
 
     // ── PUT /api/v1/keywords/{id} ──
+    [Authorize]
     [HttpPut("{id:guid}")]
     [EnableRateLimiting("strict")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateKeywordDto dto)
@@ -59,6 +62,7 @@ public class KeywordsController : ControllerBase
     }
 
     // ── DELETE /api/v1/keywords/{id} ──
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:guid}")]
     [EnableRateLimiting("strict")]
     public async Task<IActionResult> Delete(Guid id)

@@ -4,6 +4,7 @@ using GlossaryService.Common.DTOs;
 using GlossaryService.Common.Helpers;
 using GlossaryService.DTOs;
 using GlossaryService.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -37,6 +38,7 @@ public class TagsController : ControllerBase
         return tag is null ? NotFound() : Ok(ResponseHelper.Success(tag, LogConst.GLOSSARY_SERVICE + LogConst.GET_TAGS));
     }
 
+    [Authorize]
     [HttpPost]
     [EnableRateLimiting("strict")]
     public async Task<IActionResult> Create([FromBody] CreateTagDto dto)
@@ -45,6 +47,7 @@ public class TagsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, ResponseHelper.Success(created, LogConst.GLOSSARY_SERVICE + LogConst.CREATE_TAGS));
     }
 
+    [Authorize]
     [HttpPut("{id:guid}")]
     [EnableRateLimiting("strict")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTagDto dto)
@@ -53,6 +56,7 @@ public class TagsController : ControllerBase
         return updated is null ? NotFound() : Ok(ResponseHelper.Success(updated, LogConst.GLOSSARY_SERVICE + LogConst.UPDATE_TAGS));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:guid}")]
     [EnableRateLimiting("strict")]
     public async Task<IActionResult> Delete(Guid id)
